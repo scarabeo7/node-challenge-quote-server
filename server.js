@@ -12,7 +12,7 @@ app.use(cors());
 const quotes = require("./quotes.json");
 
 //Check that port 4040 is not in use otherwise set it to a different port
-//const PORT = process.env.PORT || 4040;
+const PORT = process.env.PORT || 4040;
 
 //You can use this function to pick one element at random from a given array
 //example: pickFromArray([1,2,3,4]), or
@@ -61,8 +61,4 @@ app.get("/quotes/search", (req, res) => {
 //...END OF YOUR CODE
 
 //Start our server so that it listens for HTTP requests!
-//app.listen(PORT, () => console.log(`Your app is listening on port ${PORT}`));
-//Start our server so that it listens for HTTP requests!
-const listener = app.listen(3001, () => {
-  console.log("Your app is listening on port " + listener.address().port);
-});
+app.listen(PORT, () => console.log(`Your app is listening on port ${PORT}`));
