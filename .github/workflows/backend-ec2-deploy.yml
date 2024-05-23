@@ -1,1 +1,41 @@
+name: Push-to-EC2
+
+# Trigger deployment only on push to main branch
+on:
+  push:
+    branches:
+      - chizim-chinuru-node-w-1
+
+jobs:
+  deploy:
+    name: Deploy quote server config to EC2 on chizim-chinuru-node-w-1 branch push
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy to Server 1
+
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          HOSTNAME: ${{ secrets.HOST_DNS }}
+          USER_NAME: ${{ secrets.USERNAME }}
+
+        run: |
+          echo "$PRIVATE_KEY" > server1 && chmod 600 server1
+          ssh -o StrictHostKeyChecking=no -i server1 ${USER_NAME}@${HOSTNAME}
+
+              # Now we have got the access of EC2 and we will start the deploy .
+              sudo apt update
+              sudo apt upgrade -y
+              sudo apt install nodejs -y
+              sudo apt install npm -y
+              cat <<EOF > /home/ubuntu/script.sh
+              #!/bin/bash
+              git clone https://github.com/scarabeo7/node-challenge-quote-server.git
+              cd node-challenge-quote-server
+              git checkout chizim-chinuru-node-w-1
+              npm install
+              npm start
+              EOF
+              bash /home/ubuntu/script.sh
 
