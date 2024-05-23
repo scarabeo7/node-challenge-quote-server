@@ -25,12 +25,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i server1 ${USER_NAME}@${HOSTNAME}
 
               # Now we have got the access of EC2 and we will start the deploy .
+              cat <<EOF > /home/ubuntu/script.sh
+              #!/bin/bash
               sudo apt update
               sudo apt upgrade -y
               sudo apt install nodejs -y
               sudo apt install npm -y
-              cat <<EOF > /home/ubuntu/script.sh
-              #!/bin/bash
               git clone https://github.com/scarabeo7/node-challenge-quote-server.git
               cd node-challenge-quote-server
               git checkout chizim-chinuru-node-w-1
