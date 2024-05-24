@@ -1,27 +1,28 @@
-name: Push-to-EC2
+name: Setup SSH for EC2 instance
 
-# Trigger deployment only on push to main branch
 on:
   push:
     branches:
       - chizim-chinuru-node-w-1
 
 jobs:
-  deploy:
-    name: Deploy quote server config to EC2 on chizim-chinuru-node-w-1 branch push
+  setup-ssh:
     runs-on: ubuntu-latest
-
+    env:
+      EC2_SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      EC2_URL: ${{ secrets.EC2_URL }}
+      EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
     steps:
-      - name: Deploy to Server 1
-        uses: actions/checkout@v2
-        
-      - name: Executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@master
-        with: 
-          host: ${{ secrets.HOST_DNS }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
+    - name: Setup SSH for EC2
+      uses: omarhosny206/setup-ssh-for-ec2@v1.0.0
+      with:
+          EC2_SSH_PRIVATE_KEY: $EC2_SSH_PRIVATE_KEY
+          EC2_URL: $EC2_URL
+    # then you can run commands/scripts directly on the EC2 instance e.g.:
+    - name: Create a new file on the EC2 instance with "hello-world"
+      run: |
+        ssh -o StrictHostKeyChecking=no -i $EC2_USERNAME@$EC2_URL
+
             cat <<EOF > /home/ubuntu/script.sh
             #!/bin/bash
             sudo apt update
