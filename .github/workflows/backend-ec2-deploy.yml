@@ -23,7 +23,7 @@ jobs:
       - name: ssh into ec2
         run: |
           echo "$PRIVATE_KEY" > server1 && chmod 600 server1
-          ssh -o StrictHostKeyChecking=no -i server1 ${USER_NAME}@${HOSTNAME}
+          ssh -o StrictHostKeyChecking=no -i server1 ${USER_NAME}@${HOSTNAME} '
 
               # Now we have got the access of EC2 and we will start the deploy .
               cat <<EOF > /home/ubuntu/script.sh
@@ -39,4 +39,5 @@ jobs:
               npm start
               EOF
               bash /home/ubuntu/script.sh
+              '
 
